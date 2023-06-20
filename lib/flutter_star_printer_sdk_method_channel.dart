@@ -64,14 +64,18 @@ class MethodChannelFlutterStarPrinterSdk
     required FlutterStarPrinter printer,
     required FlutterStarPrinterDocument document,
   }) async {
-    await methodChannel.invokeMethod<bool>(
-      'printDocument',
-      {
-        "interfaceType": printer.connection.name,
-        "identifier": printer.identifier,
-        "document": document.toMap(),
-      },
-    );
+    try {
+      await methodChannel.invokeMethod<bool>(
+        'printDocument',
+        {
+          "interfaceType": printer.connection.name,
+          "identifier": printer.identifier,
+          "document": document.toMap(),
+        },
+      );
+    } on PlatformException {
+      throw "Invalid Operation";
+    }
   }
 
   @override
