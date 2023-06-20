@@ -99,6 +99,8 @@ class StarPrinterAdapter(private val mContext: Context) {
                     val response = connectPrinter(printer);
                     Log.i(LOG_TAG, response.toString())
                     printer!!.printAsync(commands).await()
+                } catch (e: Exception) {
+                    Log.e(LOG_TAG, "Error: $e")
                 } finally {
                     val response = disconnectPrinter(printer);
                     Log.i(LOG_TAG, response.toString())
