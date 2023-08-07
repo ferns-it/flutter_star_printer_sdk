@@ -89,18 +89,26 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                         BluetoothPermissionManager(mContext = context, mActivity = activity);
                     if (!bluetoothPermissionManager.hasPermission()) {
                         bluetoothPermissionManager.requestPermission();
+                    } else {
+                        starPrinterAdapter.discoverPrinter(interfaceTypes, { printer ->
+                            val printerMap = printerToMap(printer);
+                            channel.invokeMethod("onDiscovered", printerMap);
+                        }) {
+                            Toast.makeText(
+                                context, "Bluetooth Star Printer Discovery Finished", Toast.LENGTH_LONG
+                            ).show()
+                        };
                     }
+                } else {
+                    starPrinterAdapter.discoverPrinter(interfaceTypes, { printer ->
+                        val printerMap = printerToMap(printer);
+                        channel.invokeMethod("onDiscovered", printerMap);
+                    }) {
+                        Toast.makeText(
+                            context, "Star Printer Discovery Finished", Toast.LENGTH_LONG
+                        ).show()
+                    };
                 }
-
-                starPrinterAdapter.discoverPrinter(interfaceTypes, { printer ->
-                    val printerMap = printerToMap(printer);
-                    channel.invokeMethod("onDiscovered", printerMap);
-                }) {
-                    Toast.makeText(
-                        context, "Discovery Finished", Toast.LENGTH_LONG
-                    ).show()
-                };
-
                 result.success(null);
             }
             "connectPrinter" -> {
