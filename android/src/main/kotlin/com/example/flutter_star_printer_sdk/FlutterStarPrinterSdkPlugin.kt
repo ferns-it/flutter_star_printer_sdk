@@ -57,16 +57,16 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        TODO("Not yet implemented")
+        Log.d(tag, "onDetachedFromActivityForConfigChanges")
     }
-
-    override fun onReattachedToActivityForConfigChanges(p0: ActivityPluginBinding) {
-        TODO("Not yet implemented")
+    
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        Log.d(tag, "onReattachedToActivityForConfigChanges")
     }
-
+    
     override fun onDetachedFromActivity() {
-        TODO("Not yet implemented")
-    }
+        Log.d(tag, "onDetachedFromActivity")
+    }    
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
