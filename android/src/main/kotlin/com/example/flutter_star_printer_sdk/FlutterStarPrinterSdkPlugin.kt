@@ -57,15 +57,15 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        Log.d(tag, "onDetachedFromActivityForConfigChanges")
+        Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onDetachedFromActivityForConfigChanges")
     }
     
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        Log.d(tag, "onReattachedToActivityForConfigChanges")
+        Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onReattachedToActivityForConfigChanges")
     }
     
     override fun onDetachedFromActivity() {
-        Log.d(tag, "onDetachedFromActivity")
+        Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onDetachedFromActivity")
     }    
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
