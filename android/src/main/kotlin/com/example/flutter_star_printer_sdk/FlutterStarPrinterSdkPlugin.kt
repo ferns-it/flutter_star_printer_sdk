@@ -1,9 +1,6 @@
 package com.example.flutter_star_printer_sdk
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -21,7 +18,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 import kotlinx.coroutines.*
 
@@ -59,14 +55,14 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
     override fun onDetachedFromActivityForConfigChanges() {
         Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onDetachedFromActivityForConfigChanges")
     }
-    
+
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onReattachedToActivityForConfigChanges")
     }
-    
+
     override fun onDetachedFromActivity() {
         Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onDetachedFromActivity")
-    }    
+    }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
@@ -95,7 +91,9 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                             channel.invokeMethod("onDiscovered", printerMap);
                         }) {
                             Toast.makeText(
-                                context, "Bluetooth Star Printer Discovery Finished", Toast.LENGTH_LONG
+                                context,
+                                "Bluetooth Star Printer Discovery Finished",
+                                Toast.LENGTH_LONG
                             ).show()
                         };
                     }
@@ -111,6 +109,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                 }
                 result.success(null);
             }
+
             "connectPrinter" -> {
                 val args = call.arguments as Map<*, *>
                 val printer = printerFromArg(args);
@@ -125,6 +124,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                         connected == null || error != null -> error(
                             "Printer Error", error, response
                         )
+
                         else -> error(
                             "Printer Error",
                             "Unknown error occurred while connecting to the printer",
@@ -133,6 +133,22 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                     }
                 }
             }
+
+            "savePrinter" -> {
+                val args = call.arguments as Map<*, *>
+                starPrinterAdapter.savePrinterConfiguration(args);
+                result.success(true)
+            }
+
+            "loadPrinter" -> {
+                val config = starPrinterAdapter.loadPrinterConfiguration();
+                return if (config == null) {
+                    result.success(null)
+                } else {
+                    result.success(config)
+                }
+            }
+
             "disconnectPrinter" -> {
                 val args = call.arguments as Map<*, *>
                 val printer = printerFromArg(args);
@@ -147,6 +163,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                         disconnected == null || error != null -> error(
                             "Printer Error", error, response
                         )
+
                         else -> error(
                             "Printer Error",
                             "Unknown error occurred while disconnecting the printer",
@@ -155,6 +172,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                     }
                 }
             }
+
             "printDocument" -> {
                 val args = call.arguments as Map<*, *>
                 val printer = printerFromArg(args);
@@ -166,6 +184,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                 );
                 result.success(true);
             }
+
             else -> result.notImplemented()
         }
     }

@@ -118,4 +118,56 @@ class MethodChannelFlutterStarPrinterSdk
 
   @override
   void resetDiscoveryResult() => broadcastListeners.reset();
+
+  @override
+  Future<void> savePrinter(FlutterStarPrinter printer) async {
+    try {
+      await methodChannel.invokeMethod<bool>(
+        'savePrinter',
+        {
+          "interfaceType": printer.connection.name,
+          "identifier": printer.identifier
+        },
+      );
+    } on PlatformException {
+      throw "Failed to save printer";
+    }
+  }
+
+  @override
+  Future<FlutterStarPrinter?> loadSavedPrinter() async {
+    try {
+      // Invoke the 'loadPrinter' method via the method channel to get printer configuration.
+      final config = await methodChannel
+          .invokeMethod<Map<Object?, Object?>>('loadPrinter');
+
+      // If no configuration is available, return null.
+      if (config == null) return null;
+
+      // Extract printer model from the configuration.
+      final model = StarPrinterModel.fromName(
+        Utils.snakeCaseToCamelCase(config['model'] as String),
+      );
+
+      // Extract printer identifier from the configuration.
+      final identifier = config['identifier'] as String;
+
+      // Extract the connection type and convert it to the corresponding enum.
+      final connection = StarConnectionInterface.fromName(
+        config['connection'].toString().toLowerCase(),
+      );
+
+      // Create a FlutterStarPrinter instance using the extracted data.
+      final printer = FlutterStarPrinter(
+        model: model,
+        identifier: identifier,
+        connection: connection,
+      );
+
+      return printer;
+    } on PlatformException {
+      // Handle any exceptions that may occur during the loading process.
+      throw "Failed to load printer settings";
+    }
+  }
 }

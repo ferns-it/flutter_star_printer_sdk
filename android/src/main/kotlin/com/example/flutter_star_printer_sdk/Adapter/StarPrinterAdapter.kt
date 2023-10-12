@@ -1,9 +1,12 @@
 package com.example.flutter_star_printer_sdk.Adapter
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.starmicronics.stario10.*
 import com.starmicronics.stario10.starxpandcommand.StarXpandCommandBuilder
 import io.flutter.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 
 class StarPrinterAdapter(private val mContext: Context) {
@@ -80,6 +83,56 @@ class StarPrinterAdapter(private val mContext: Context) {
     }
 
 
+    fun savePrinterConfiguration(configuration: Map<*, *>) {
+        // Define the SharedPreferences file name
+        val fileName = "printer_config_prefs"
+
+        // Get the SharedPreferences instance
+        val printerPrefs: SharedPreferences =
+            mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+
+        // Create an editor to modify the preferences
+        val editor: SharedPreferences.Editor = printerPrefs.edit()
+
+        // Initialize Gson for JSON serialization
+        val gson = Gson()
+
+        // Serialize the configuration (args) to JSON
+        val json = gson.toJson(configuration)
+
+        // Store the JSON string in SharedPreferences under the key "printer_configuration"
+        editor.putString("printer_configuration", json)
+
+        // Apply the changes to SharedPreferences
+        editor.apply()
+    }
+
+    fun loadPrinterConfiguration(): Map<*, *>? {
+        // Define the SharedPreferences file name
+        val fileName = "printer_config_prefs"
+
+        // Get the SharedPreferences instance
+        val printerPrefs: SharedPreferences =
+            mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+
+        // Retrieve the JSON string from SharedPreferences using the key "printer_configuration"
+        val json = printerPrefs.getString("printer_configuration", null)
+
+        if (json != null) {
+            // Initialize Gson for JSON deserialization
+            val gson = Gson()
+
+            // Define the type of the configuration Map
+            val type = object : TypeToken<Map<*, *>>() {}.type
+
+            // Deserialize the JSON string to a Map
+            return gson.fromJson(json, type)
+        }
+
+        return null
+    }
+
+
     suspend fun disconnectPrinter(printer: StarPrinter): Map<String, Any?> {
         return try {
             printer.closeAsync().await()
@@ -88,6 +141,7 @@ class StarPrinterAdapter(private val mContext: Context) {
             mapOf("error" to e.localizedMessage, "disconnected" to false)
         }
     }
+
 
     fun printDocument(printer: StarPrinter, builder: StarXpandCommandBuilder) {
         try {

@@ -49,6 +49,18 @@ class MockFlutterStarPrinterSdkPlatform
   void resetDiscoveryResult() {
     // TODO: implement resetDiscoveryResult
   }
+
+  @override
+  Future<void> savePrinter(FlutterStarPrinter printer) {
+    // TODO: implement savePrinter
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<FlutterStarPrinter?> loadSavedPrinter() {
+    // TODO: implement loadSavedPrinter
+    throw UnimplementedError();
+  }
 }
 
 void main() {
