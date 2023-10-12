@@ -90,4 +90,12 @@ class FlutterStarPrinterSdk {
       document: document,
     );
   }
+
+  Future<bool> savePrinter(FlutterStarPrinter printer) async {
+    return FlutterStarPrinterSdkPlatform.instance.savePrinter(printer);
+  }
+
+  Future<FlutterStarPrinter?> loadSavedPrinter() async {
+    return FlutterStarPrinterSdkPlatform.instance.loadSavedPrinter();
+  }
 }

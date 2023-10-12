@@ -51,7 +51,7 @@ class MockFlutterStarPrinterSdkPlatform
   }
 
   @override
-  Future<void> savePrinter(FlutterStarPrinter printer) {
+  Future<bool> savePrinter(FlutterStarPrinter printer) {
     // TODO: implement savePrinter
     throw UnimplementedError();
   }

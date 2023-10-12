@@ -55,7 +55,7 @@ abstract class FlutterStarPrinterSdkPlatform extends PlatformInterface {
     );
   }
 
-  Future<void> savePrinter(FlutterStarPrinter printer) async {
+  Future<bool> savePrinter(FlutterStarPrinter printer) async {
     throw UnimplementedError('savePrinter() has not been implemented.');
   }
 

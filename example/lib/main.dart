@@ -98,6 +98,17 @@ class _MyAppState extends State<MyApp> {
                                 Text(snapshot.data?.connection.name ?? ""),
                             onTap: () async {
                               if (snapshot.data != null) {
+                                final saved = await _flutterStarPrinterSdkPlugin
+                                    .savePrinter(snapshot.data!);
+
+                                if (!saved) return;
+
+                                final printer =
+                                    await _flutterStarPrinterSdkPlugin
+                                        .loadSavedPrinter();
+
+                                if (printer == null) return;
+
                                 final builder = await FlutterStarPrinterReceipt
                                     .buildReceipt();
 
@@ -105,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                                   ..addPrint(builder);
 
                                 await _flutterStarPrinterSdkPlugin.printReceipt(
-                                  printer: snapshot.data!,
+                                  printer: printer,
                                   document: document,
                                 );
                               }

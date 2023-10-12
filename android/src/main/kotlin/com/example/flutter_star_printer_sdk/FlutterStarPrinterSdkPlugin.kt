@@ -64,7 +64,7 @@ class FlutterStarPrinterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
         Log.d("FLUTTER_STAR_PRINTER_PLUGIN", "onDetachedFromActivity")
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         when (call.method) {
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             "discoverPrinter" -> {

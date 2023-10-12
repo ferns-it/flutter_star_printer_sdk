@@ -120,15 +120,18 @@ class MethodChannelFlutterStarPrinterSdk
   void resetDiscoveryResult() => broadcastListeners.reset();
 
   @override
-  Future<void> savePrinter(FlutterStarPrinter printer) async {
+  Future<bool> savePrinter(FlutterStarPrinter printer) async {
     try {
-      await methodChannel.invokeMethod<bool>(
+      final saved = await methodChannel.invokeMethod<bool?>(
         'savePrinter',
         {
-          "interfaceType": printer.connection.name,
-          "identifier": printer.identifier
+          "connection": printer.connection.name,
+          "identifier": printer.identifier,
+          "model": printer.model.name,
         },
       );
+
+      return saved ?? false;
     } on PlatformException {
       throw "Failed to save printer";
     }
